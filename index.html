@@ -270,6 +270,7 @@
 
     //this function is called when the ball touches the ground
     function gameOver() {
+        // WIDS Workshop: high score is updated here. Use IndexedDB or localStorage to save it to local disk
         if (highscore < score) {
           highscore = score;
           document.getElementById("highscore").innerHTML = 'High Score: ' + highscore;
@@ -454,10 +455,15 @@
 	context.fillText("Collect as many dots", 200, 215);
 	context.fillText("as you can!!", 200, 255);
     drawRect();
+
+    // WIDS Workshop: this is the window.onload function.
+    // Init IndexedDB here and read the save highscore value here.
 	}
 
     //calls init function whenever the page gets fully loaded
     window.addEventListener("load",starter,true);
+
+  // WIDS Workshop: Add Offline AppCache "updateready" event listener here
 
 </script>
 </head>
