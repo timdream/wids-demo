@@ -30,6 +30,7 @@
     var ballMove = false;
     var scoreDiv;
     var score = 0;
+    var highscore = 0;
     var colors = new Array();
 
 
@@ -269,6 +270,10 @@
 
     //this function is called when the ball touches the ground
     function gameOver() {
+        if (highscore < score) {
+          highscore = score;
+          document.getElementById("highscore").innerHTML = 'High Score: ' + highscore;
+        }
         isGameOver = true;
         document.getElementById("status").innerHTML = "<p style=\"font-size:20px; color:#333; font-family:Arial;\">Game Over. Press F5 to restart.</p>";
     }
@@ -458,6 +463,7 @@
 </head>
 <body style="background-color:#f1eeee;">
 <div align="center">
+    <div id="highscore" style="font-size:40px; color:#0c0; font-family:Arial;">High Score : 0</div>
     <div id="score" style="font-size:40px; color:#c00; font-family:Arial;">Score : 0</div>
     <div id="level" style="font-size:40px; color:#00a; font-family:Arial;">Level : 1</div>
     <canvas width="400" height="410" id="canvas" style="background-image:url(HTML5_Logo_512.png); background-repeat:no-repeat; background-position:center;"></canvas>
