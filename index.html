@@ -2,9 +2,9 @@
 <html>
 <head>
 <title>HTML5 Jump Game</title>
- 
+
 <link rel="stylesheet" href="main.css" />
- 
+
 <script type="text/javascript">
     //global variables
     var context;
@@ -19,11 +19,11 @@
     var gravity = 0.5;
     var jumpVel = 9;
     var horizontalVel = 3;
- 
+
     var normalSpeed = 2;
- 
+
     var ball = {"x":width/2,"y":height-barSizeHeight,"dx":0,"dy":normalSpeed,"acc":0,"radius":10}
- 
+
     var step = 40;
     var collidedBar = null;
 
@@ -31,22 +31,22 @@
     var scoreDiv;
     var score = 0;
     var colors = new Array();
- 
- 
+
+
     var stop = true;
- 
+
     var frameSpeed = 25;
- 
+
     var gamePause = false;
     var isGameOver = false;
- 
+
 /*******************Initialization Functions*****************************************/
- 
+
     //this function is called first when whole page gets loaded
     function init() {
         context = document.getElementById("canvas").getContext("2d");
         drawRect();
- 
+
         //add the colors into a global array, so that bars can be colored
         colors.push("#eee614");
         colors.push("#ad0505");
@@ -55,23 +55,23 @@
         colors.push("#761884");
         colors.push("#00895a");
         colors.push("#9f521f");
- 
+
         //initializes the first set of bars
         initBars();
         initPlus();
         initBall();
- 
+
         //assigns a function to be called repeatedly
         //setTimeout(gameProcess,1000/frameSpeed);
         timerFunction();
- 
+
         scoreDiv = document.getElementById("score");
- 
+
         //bind keyUp and keyDown events
         window.onkeydown = keydown;
         window.onkeyup = keyup;
     }
- 
+
     //initializes the ball
     function initBall() {
         //this in effect puts the ball on the fifth bar
@@ -80,7 +80,7 @@
         ball.y = bars[mid_indx].y-ball.radius;
         collidedBar = bars[mid_indx];
     }
- 
+
     //initializes the bars for the first time
     function initBars() {
         var y_bar = height-barSizeHeight;
@@ -107,11 +107,11 @@
             //y coordinate for next bar
             y1-=step;
         }
- 
+
     }
 
 /*******************Event Functions*****************************************/
- 
+
     //called whenever a key is pressed
     function keydown(e) {
         //space bar keya
@@ -141,9 +141,9 @@
             gamePause = !gamePause;
             timerFunction();
         }
- 
+
     }
- 
+
     //called whenever a key which was earlier pressed, is released
     function keyup(e) {
         if(e.keyCode ==37) {
@@ -154,18 +154,18 @@
     }
 
 /*******************Process Functions*****************************************/
- 
+
     //this function is called repeatedly and handles the whole game
     function gameProcess() {
         //clears the canvas
         clear();
- 
+
         //draws boundary rectangle
         drawRect();
- 
+
         //increments the pixels coordinates of bars
         moveBars();
- 
+
         //increments the pixels coordinates of plus bars
         movePlus();
 
@@ -174,12 +174,12 @@
 
         //checks for the collision between bars and ball
         checkPoint();
- 
+
         //checks if ball is to be moved or not
         ball = moveBall(ball);
- 
+
         var res = checkBarCollision();
- 
+
         //checks whether the ball has collided with a bar or not
         if(res.bool) {
             //if the ball has collided with the bar then the ball velocity matches the bar velocity and acceleration
@@ -188,13 +188,13 @@
             collidedBar = res.bar;
             stop = true;
         }
- 
+
         //draws the ball at new location
         drawBall(ball.x,ball.y,ball.radius);
- 
+
         //draws bars at the new location
         drawBars();
- 
+
         //checks for the collision between bars and ball
         if(checkFloorCollision()) {
             ball.dy = 0;
@@ -202,18 +202,18 @@
             ball.acc = 0;
             stop = true;
         }
- 
+
         makeDifficult();
- 
+
         //if the game is not paused and it not over, then only the game is continued further
         if(!gamePause&&!isGameOver)
             timerFunction();
     }
- 
+
         function checkPoint() {
         //checks for the collision between ball and bar
         for(var i=0;i<plus.length;i++) {
-            if((ball.y-ball.radius<=plus[i].y+plusSizeHeight&&ball.y+ball.radius>=plus[i].y)&&(ball.x+ball.radius>=plus[i].x&&ball.x-ball.radius<=plus[i].x+plusSizeWidth)) 
+            if((ball.y-ball.radius<=plus[i].y+plusSizeHeight&&ball.y+ball.radius>=plus[i].y)&&(ball.x+ball.radius>=plus[i].x&&ball.x-ball.radius<=plus[i].x+plusSizeWidth))
 			{
             score+=200;
 			plus.splice(i,1);
@@ -227,7 +227,7 @@
 		function timerFunction() {
         setTimeout(gameProcess,1000/frameSpeed);
     }
- 
+
     //this function increases the difficulty of the game based on the score till now
     function makeDifficult() {
         if(score>1000&&score<3000) {
@@ -266,13 +266,13 @@
 			barSizeWidth = 80;
         }
     }
- 
+
     //this function is called when the ball touches the ground
     function gameOver() {
         isGameOver = true;
         document.getElementById("status").innerHTML = "<p style=\"font-size:20px; color:#333; font-family:Arial;\">Game Over. Press F5 to restart.</p>";
     }
-	
+
 	var strt = 0;
 
     function starte() {
@@ -282,30 +282,30 @@
 		    document.getElementById("starte").value = "RELOAD";
 		}
 		else{
-		location.reload(true);	
+		location.reload(true);
 		}
     }
-  
+
 /*******************Collision Detection Functions*****************************************/
- 
+
     function checkBarCollision() {
         //coords of bottom point
         var response = {"bar":null,"bool":false};
         var temp_y = ball.y+ball.radius;
- 
+
         for(var i = 0; i<bars.length;i++) {
             var mod = Math.floor(bars[i].y-temp_y);
- 
+
             var b = mod>-5 && mod<5;
             var b1 = mod>-barSizeHeight && mod<barSizeHeight;
- 
+
             //going down
             if(b1&&(ball.x>=bars[i].x&&ball.x<=bars[i].x+barSizeWidth)&&ball.dy>0) {
                 ball.y = bars[i].y-ball.radius;
                 response.bool  = true;
                 response.bar  = bars[i];
             }
- 
+
             //going up
             if(b&&(ball.x>=bars[i].x&&ball.x<=bars[i].x+barSizeWidth)&&ball.dy<=0) {
                 ball.y = bars[i].y-ball.radius;
@@ -315,7 +315,7 @@
         }
         return response;
     }
- 
+
     function checkFloorCollision() {
         //checks for the collision between ball and bar
         if(height-(ball.y+ball.radius)<01) {
@@ -324,10 +324,10 @@
         }
         var right_wall = ball.x+ball.radius-width;
         var left_wall = ball.x-ball.radius;
- 
+
         var bol1 = right_wall<3&&right_wall>-3;
         var bol2 = left_wall<3&&left_wall>-3;
- 
+
         if(bol1||bol2) {
             ball.dx = 0;
         }
@@ -336,26 +336,26 @@
         }
         return false;
     }
- 
+
 /*******************Movement Functions*****************************************/
- 
+
     function movePlus() {
         //checks if the bar is about to move out from the canvas
         if(bars.length>0&&bars[0].y==height-2) {
             //removes the bottom-most bar
             plus.shift();
- 
+
             //adds a new bar for every bar pushed out
             var j = (width-plusSizeWidth)*Math.random();
             plus.push({"x":j,"y":-3*plusSizeHeight,"color":colors[Math.floor(6*Math.random())]});
         }
- 
+
         //increments the y-coordinate of all the bars
         for(var i=0;i<plus.length;i++) {
             plus[i].y += 2;
         }
     }
- 
+
     function moveBall(inpBall) {
         //checks if the ball is at right or left end. If not then increments the ball coordinates
         inpBall.x += Math.floor(inpBall.dx);
@@ -363,28 +363,28 @@
         inpBall.y += Math.floor(inpBall.dy + inpBall.acc/2);
         return inpBall;
     }
- 
+
     function moveBars() {
         //checks if the bar is about to move out from the canvas
         if(bars.length>0&&bars[0].y==height-normalSpeed) {
             //removes the bottom-most bar
             bars.shift();
- 
+
             //increments the score by 20 for every removed bar
             score+=20;
             scoreDiv.innerHTML = "Score : "+score;
- 
+
             //adds a new bar for every bar pushed out
             var j = (width-barSizeWidth)*Math.random();
             bars.push({"x":j,"y":-barSizeHeight,"color":colors[Math.floor(6*Math.random())]});
         }
- 
+
         //increments the y-coordinate of all the bars
         for(var i=0;i<bars.length;i++) {
             bars[i].y += normalSpeed;
         }
     }
- 
+
 /*******************Drawing Functions*****************************************/
     //draws all the bars, by taking their references from a global array
     function drawPlus() {
@@ -407,7 +407,7 @@
             drawBar(bars[i].x,bars[i].y,bars[i].color);
         }
     }
- 
+
     //draws black ball at specified location
     function drawBall(x,y,r) {
         context.fillStyle = "#2f2f2f";
@@ -416,7 +416,7 @@
         context.closePath();
         context.fill();
     }
- 
+
     //draws rectangle at the canvas boundary
     function drawRect() {
         context.beginPath();
@@ -426,7 +426,7 @@
 		context.fillStyle = "rgba(255, 245, 187, 0.4)";
         context.fillRect(0,0,400,410);
     }
- 
+
     //draws a bar at specified location, and of specified color
     function drawBar(x,y,color) {
         context.fillStyle = color;
@@ -435,25 +435,25 @@
         context.closePath();
         context.fill();
     }
- 
+
     //clears the whole canvas
     function clear() {
         context.clearRect(0,0,width,height);
     }
-	
+
     function starter() {
     context = document.getElementById("canvas").getContext("2d");
 	context.font = "40px Arial";
 	context.textAlign = "center";
-	context.fillText("Click Start", 200, 160);  
-	context.fillText("Collect as many dots", 200, 215);  
-	context.fillText("as you can!!", 200, 255);  
+	context.fillText("Click Start", 200, 160);
+	context.fillText("Collect as many dots", 200, 215);
+	context.fillText("as you can!!", 200, 255);
     drawRect();
 	}
-	
+
     //calls init function whenever the page gets fully loaded
     window.addEventListener("load",starter,true);
- 
+
 </script>
 </head>
 <body style="background-color:#f1eeee;">
