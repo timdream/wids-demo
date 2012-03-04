@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html manifest="site.appcache">
 <head>
 <title>HTML5 Jump Game</title>
 
@@ -528,8 +528,19 @@
     //calls init function whenever the page gets fully loaded
     window.addEventListener("load",starter,true);
 
-  // WIDS Workshop: Add Offline AppCache "updateready" event listener here
+    // WIDS Workshop: Add Offline AppCache "updateready" event listener here
 
+   if (window.applicationCache) {
+      window.applicationCache.addEventListener(
+         'updateready',
+         function(e) {
+           var reload = window.confirm('A new version of the game is available. Reload?');
+           if (reload)
+              window.location.reload();
+         },
+         false
+      );
+    }
 </script>
 </head>
 <body style="background-color:#f1eeee;">
